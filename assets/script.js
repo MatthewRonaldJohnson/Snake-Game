@@ -64,8 +64,8 @@ function moveSegments(){
     segmentPositions = segmentPositions.splice(0, segmentPositions.length-1) //remove last item in array
     segmentPositions.unshift([xPosition,yPosition]) //add current player location to index 0 of array
     for (let i = 0; i < segments.length; i++) {
-        segments[i].style.top = segmentPositions[i][0];
-        segments[i].style.right = segmentPositions[i][1];
+        segments[i].style.top = `${segmentPositions[i][1]}px`;
+        segments[i].style.right = `${segmentPositions[i][0]}px`;
     }
 }
 
