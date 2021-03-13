@@ -1,0 +1,15 @@
+#playing-area {
+    border: solid black 1px;
+    width: 600px;
+    height: 600px;
+    position: relative;
+}
+
+#player {
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    position: absolute;
+    right: 300px;
+    top: 300px;
+}
