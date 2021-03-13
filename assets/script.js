@@ -57,7 +57,7 @@ function playGame() {
             gameOver();
             clearInterval(gamePlayLoop);
         }
-    }, 50);
+    }, 17);
 }
 
 function moveSegments(){
