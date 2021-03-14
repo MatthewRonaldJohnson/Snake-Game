@@ -10,6 +10,7 @@ var pYpos;
 var pellet = document.createElement('div');
 var segments = []
 var segmentPositions = [];
+const startBtn = document.getElementById('start')
 
 document.addEventListener("keydown", function (e) {
     switch (e.key) {
@@ -24,8 +25,20 @@ document.addEventListener("keydown", function (e) {
     }
 })
 
+function resetGame(){
+    score = 0;
+    upDateScore();
+    xPosition = 300;
+    yPosition = 300;
+    player.style.top = `${yPosition}px`
+    player.style.right = `${xPosition}px`
+    direction = 'up'
+}
+
 function playGame() {
+    resetGame();
     makePellet();
+    startBtn.disabled = true;
     var gamePlayLoop = setInterval(function () {
         moveSegments();
         switch (direction) {
@@ -81,6 +94,7 @@ function upDateScore() {
 }
 
 function gameOver() {
+    startBtn.disabled = false;
     console.log('you lose')
 }
 
