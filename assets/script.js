@@ -11,6 +11,7 @@ var pellet = document.createElement('div');
 var segments = []
 var segmentPositions = [];
 const startBtn = document.getElementById('start')
+var gamePlayLoop;
 
 document.addEventListener("keydown", function (e) {
     switch (e.key) {
@@ -25,7 +26,9 @@ document.addEventListener("keydown", function (e) {
     }
 })
 
-function resetGame(){
+function resetGame() {
+    segments = []
+    segmentPositions = [];
     score = 0;
     upDateScore();
     xPosition = 300;
@@ -33,49 +36,67 @@ function resetGame(){
     player.style.top = `${yPosition}px`
     player.style.right = `${xPosition}px`
     direction = 'up'
+    playingArea.innerHTML = '';
+    playingArea.appendChild(player)
 }
 
 function playGame() {
     resetGame();
     makePellet();
     startBtn.disabled = true;
-    var gamePlayLoop = setInterval(function () {
+    gamePlayLoop = setInterval(function () {
         moveSegments();
         switch (direction) {
             case 'up':
-                yPosition -= 4;
+                yPosition -= 8;
                 player.style.top = `${yPosition}px`
                 break;
             case 'down':
-                yPosition += 4;
+                yPosition += 8;
                 player.style.top = `${yPosition}px`
                 break;
             case 'right':
-                xPosition -= 4;
+                xPosition -= 8;
                 player.style.right = `${xPosition}px`
                 break;
             case 'left':
-                xPosition += 4;
+                xPosition += 8;
                 player.style.right = `${xPosition}px`
                 break;
         }
-        if ((yPosition <= (pYpos + 10) && yPosition >= (pYpos - 10)) && (xPosition <= (pXpos + 10) && xPosition >= (pXpos - 10))) {
-            score++;
-            playingArea.removeChild(pellet);
-            makePellet();
-            upDateScore();
-            growSnake();
-        }
-        if (yPosition <= -5 || yPosition >= 595 || xPosition <= -5 || xPosition >= 595) {
-            gameOver();
-            clearInterval(gamePlayLoop);
-        }
-    }, 17);
+        checkIfHitPellet();
+        checkIfHitBoundry();
+        checkIfHitSelf();
+    }, 33);
 }
 
-function moveSegments(){
-    segmentPositions = segmentPositions.splice(0, segmentPositions.length-1) //remove last item in array
-    segmentPositions.unshift([xPosition,yPosition]) //add current player location to index 0 of array
+function checkIfHitPellet() {
+    if ((yPosition <= (pYpos + 10) && yPosition >= (pYpos - 10)) && (xPosition <= (pXpos + 10) && xPosition >= (pXpos - 10))) {
+        score++;
+        playingArea.removeChild(pellet);
+        makePellet();
+        upDateScore();
+        growSnake();
+    }
+}
+
+function checkIfHitBoundry() {
+    if (yPosition <= -5 || yPosition >= 595 || xPosition <= -5 || xPosition >= 595) {
+        gameOver();
+    }
+}
+
+function checkIfHitSelf() {
+    for (i = 0; i < segmentPositions.length-1; i++) {
+        if (segmentPositions[i][0] === xPosition && segmentPositions[i][1] === yPosition) {
+            gameOver();
+        }
+    }
+}
+
+function moveSegments() {
+    segmentPositions = segmentPositions.splice(0, segmentPositions.length - 1) //remove last item in array
+    segmentPositions.unshift([xPosition, yPosition]) //add current player location to index 0 of array
     for (let i = 0; i < segments.length; i++) {
         segments[i].style.top = `${segmentPositions[i][1]}px`;
         segments[i].style.right = `${segmentPositions[i][0]}px`;
@@ -95,7 +116,7 @@ function upDateScore() {
 
 function gameOver() {
     startBtn.disabled = false;
-    console.log('you lose')
+    clearInterval(gamePlayLoop);
 }
 
 function growSnake() {
